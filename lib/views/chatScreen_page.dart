@@ -1,3 +1,4 @@
+import 'package:chatapp5/views/showMessage_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,6 +36,7 @@ class _ChatScreenPage5State extends State<ChatScreenPage5> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('ChatScreenPage5'),
         centerTitle: true,
@@ -49,51 +51,56 @@ class _ChatScreenPage5State extends State<ChatScreenPage5> {
               icon: Icon(Icons.logout)),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              'Message',
-              textScaleFactor: 1.3,
-              style: TextStyle(fontWeight: FontWeight.bold),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              child: Text(
+                'Message',
+                textScaleFactor: 1.3,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 20.0),
-                    child: TextFormField(
-                      controller: message,
-                      decoration: InputDecoration(
-                        hintText: 'Write message',
+            SizedBox(height: 400,),
+            ShowMessage5(),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 20.0),
+                      child: TextFormField(
+                        controller: message,
+                        decoration: InputDecoration(
+                          hintText: 'Write message',
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              IconButton(
-                  onPressed: () {
-                    if(message != null){
-                      storeMessage.collection('tayeb').doc().set({
-                        'message': message.text.trim(),
-                        'user' : loginUser!.email.toString().trim(),
-                        'time' : DateTime.now()
-                      });
-                    }
-                    message.clear();
-                  },
-                  icon: Icon(
-                    Icons.send,
-                    color: Colors.blue,
-                  )),
-            ],
-          ),
-        ],
+                IconButton(
+                    onPressed: () {
+                      if(message != null){
+                        storeMessage.collection('tayeb').doc().set({
+                          'message': message.text.trim(),
+                          'user' : loginUser!.email.toString().trim(),
+                          'time' : DateTime.now()
+                        });
+                      }
+                      message.clear();
+                    },
+                    icon: Icon(
+                      Icons.send,
+                      color: Colors.blue,
+                    )),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
