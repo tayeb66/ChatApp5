@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+var loginUser = FirebaseAuth.instance.currentUser;
 
 class ChatScreenPage5 extends StatefulWidget {
   const ChatScreenPage5({Key? key}) : super(key: key);
@@ -13,6 +17,20 @@ class _ChatScreenPage5State extends State<ChatScreenPage5> {
 
   var message = TextEditingController();
   var storeMessage = FirebaseFirestore.instance;
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+  void getCurrentUser(){
+    var user = firebaseAuth.currentUser;
+    if(user !=null){
+      loginUser = user;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +78,13 @@ class _ChatScreenPage5State extends State<ChatScreenPage5> {
               ),
               IconButton(
                   onPressed: () {
+                    if(message != null){
+                      storeMessage.collection('tayeb').doc().set({
+                        'message': message.text.trim(),
+                        'user' : loginUser!.email.toString().trim(),
+                        'time' : DateTime.now()
+                      });
+                    }
                     message.clear();
                   },
                   icon: Icon(
