@@ -1,6 +1,7 @@
 import 'package:chatapp5/controller/auth_controller.dart';
 import 'package:chatapp5/views/signUp_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage5 extends StatefulWidget {
   const LoginPage5({Key? key}) : super(key: key);
@@ -68,12 +69,14 @@ class _LoginPage5State extends State<LoginPage5> {
               ElevatedButton(
                 style: TextButton.styleFrom(
                     minimumSize: Size(200, 50), shape: StadiumBorder()),
-                onPressed: () {
+                onPressed: () async{
+                  SharedPreferences preferences = await SharedPreferences.getInstance();
                   if(emailController.text.isNotEmpty && passwordController.text.isNotEmpty){
                     authController.loginUser(context, emailController.text, passwordController.text);
                   }else{
                     authController.catchError(context, 'Something wrong');
                   }
+                  preferences.setString('email', emailController.text);
                   clearText();
 
                 },
@@ -86,8 +89,10 @@ class _LoginPage5State extends State<LoginPage5> {
               ElevatedButton(
                 style: TextButton.styleFrom(
                     minimumSize: Size(200, 50), shape: StadiumBorder()),
-                onPressed: () {
+                onPressed: () async{
+                  SharedPreferences preferences = await SharedPreferences.getInstance();
                  authController.signInWithGoogle(context);
+                 preferences.setString('email', emailController.text);
 
                 },
                 child: Text(

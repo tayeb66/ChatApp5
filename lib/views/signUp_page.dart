@@ -1,6 +1,7 @@
 import 'package:chatapp5/controller/auth_controller.dart';
 import 'package:chatapp5/views/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpPage5 extends StatefulWidget {
   const SignUpPage5({Key? key}) : super(key: key);
@@ -66,12 +67,14 @@ class _SignUpPage5State extends State<SignUpPage5> {
                     minimumSize: Size(200, 50),
                     shape: StadiumBorder()
                 ),
-                onPressed: () {
+                onPressed: () async{
+                  SharedPreferences preferences = await SharedPreferences.getInstance();
                   if(emailController.text.isNotEmpty && passwordController.text.isNotEmpty){
                     authController.register(context, emailController.text, passwordController.text);
                   }else{
                     authController.catchError(context, 'Something wrong');
                   }
+                  preferences.setString('email', emailController.text);
                   clearText();
 
                 },
